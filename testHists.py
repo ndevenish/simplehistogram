@@ -19,7 +19,7 @@ class testHist(unittest.TestCase):
     a = hists.Hist([0, 1, 2])
     # Test that this made sensible values
     self.assertEqual(a.data.size, 2)
-    self.assertEqual(a.bins, [0, 1, 2])
+    self.assertEqual(a.bins, (0, 1, 2))
   
   def testCreationWithData(self):
     "Test that data is allocated, and mismatched size data fails"
@@ -36,7 +36,13 @@ class testHist(unittest.TestCase):
     a = hists.Hist([0, 1, 2])
     a.bins = [0, 1]
     self.assertEquals(a.data.size, 1)
-  
+    # Check this was turned into a tuple
+    with self.assertRaises(TypeError):
+      a[1] = 4
+    # Check that bins must be in order
+    with self.assertRaises(hists.BinError):
+      a.bins = [0, 2, 1, 3]
+    
   def test_bin_count(self):
     """Test the .bincount property makes sense"""
     bins = [0, 1]

@@ -24,7 +24,7 @@ Initialise with bin indices:
   >>> a.bincount
   3
   >>> a.bins
-  [0, 1, 2, 3]
+  (0, 1, 2, 3)
   >>> a.data
   array([ 0.,  0.,  0.])
 

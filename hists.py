@@ -12,7 +12,7 @@ Initialise with bin indices:
   >>> a.bincount
   3
   >>> a.bins
-  [0, 1, 2, 3]
+  (0, 1, 2, 3)
   >>> a.data
   array([ 0.,  0.,  0.])
 
@@ -83,12 +83,16 @@ class Hist(object):
     # Is the bin array a valid size? (i.e. > 1 or zero)
     if len(newbins) == 1:
       raise BinError("Must provide more that one value for a single bin")
-      
+    
+    # Ensure the bins are numerically sequential
+    if not tuple(newbins) == tuple(sorted(newbins)):
+      raise BinError("Bins must be numerically ascending")
+    
     # Do we need to resize our data?
     if len(newbins) != len(self.bins):
       self.data.resize(len(newbins)-1)
     
-    self._bins = newbins
+    self._bins = tuple(newbins)
   
   @property
   def bincount(self):
