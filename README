@@ -1,0 +1,41 @@
+=============================================
+simplehistogram
+
+A very simple ndarray-based histogram class.
+
+Created by Nicholas Devenish
+
+=============================================
+
+Matplotlib histograms are geared around drawing, not
+data manupulation. This is intended to turn into a set of
+very lightweight classes for shuffling data around. This is
+very much a work-in-progress.
+
+type "make test" to run the unit tests.
+
+Vague usage:
+(see the hists.py docstring for probably more
+up-to-date instructions)
+
+
+Initialise with bin indices:
+  >>> a = Hist([0, 1, 2, 3])
+  >>> a.bincount
+  3
+  >>> a.bins
+  [0, 1, 2, 3]
+  >>> a.data
+  array([ 0.,  0.,  0.])
+
+Optionally include data and optional dtype:
+  >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3], dtype=float)
+  >>> a.data
+  array([ 1. ,  0.2,  3. ])
+
+You can do arithmetic operations in place or seperately:
+  >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3])
+  >>> b = a + a
+  >>> b -= a
+  >>> a.data == b.data
+  array([ True,  True,  True], dtype=bool)

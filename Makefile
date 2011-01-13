@@ -1,0 +1,3 @@
+
+test:
+	python -munittest discover
