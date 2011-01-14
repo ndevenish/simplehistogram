@@ -54,23 +54,21 @@ class Hist(object):
     """Initialise a new Hist.
     
     bins:  The binning scheme for this histogram
-    data:  The data to fill these bins. Must be the same size as bins
-    dtype: The numpy data type to create the data array with
+    data:  The data to fill these bins. Must be the same size as bins (Optional)
+    dtype: The numpy data type to create the data array with, if data is not provided
     """
     super(Hist, self).__init__()
     
-    # Store our dtype for later automatic generation
-    self.dtype = dtype
-    
     # Assign the internal variable so that bin assignment can test conditions
-    self._bins = bins
+    # self._bins = bins
+    self._bins = None
     self.bins = bins
     
     # Assign the data, if we have been given any
     if data is None:
       self.data = numpy.zeros(len(bins)-1, dtype=dtype)
     else:
-      self.data = numpy.array(data, dtype=dtype)
+      self.data = numpy.array(data)
 
   @property
   def bins(self):
@@ -89,7 +87,7 @@ class Hist(object):
       raise BinError("Bins must be numerically ascending")
     
     # Do we need to resize our data?
-    if len(newbins) != len(self.bins):
+    if self._bins and len(newbins) != len(self._bins):
       self.data.resize(len(newbins)-1)
     
     self._bins = tuple(newbins)
@@ -109,7 +107,7 @@ class Hist(object):
     "Sets the internal data object"
     # Check this matches our bin count
     if len(newdata) == len(self._bins)-1:
-      self._data = numpy.array(newdata, dtype=self.dtype)
+      self._data = numpy.array(newdata)
     else:
       raise BinError("Data incorrect dimensions! Data size {} != {} bins".format(len(newdata), len(self._bins)-1))
   
@@ -154,9 +152,9 @@ class Hist(object):
   def __ifloordiv__(self, other):
     """self //= someother"""
     if hasattr(other, "_data"):
-      self._data /= other._data
+      self._data //= other._data
     else:
-      self.data /= other
+      self.data //= other
     return self
   
   # Arithmetic operations

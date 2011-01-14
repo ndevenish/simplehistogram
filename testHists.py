@@ -21,6 +21,13 @@ class testHist(unittest.TestCase):
     self.assertEqual(a.data.size, 2)
     self.assertEqual(a.bins, (0, 1, 2))
   
+  def testPreserveDtype(self):
+    "Tests that numpy array type is preserved"
+    data = numpy.array([1, 2, 3], dtype=int)
+    bins = [0, 1, 2, 3]
+    a = hists.Hist(bins, data=data)
+    self.assertEqual(a.data.dtype, data.dtype)
+    
   def testCreationWithData(self):
     "Test that data is allocated, and mismatched size data fails"
     a = hists.Hist([0, 1, 2], data=[1, 5])
@@ -67,7 +74,9 @@ class testHist(unittest.TestCase):
     self.assertTrue((a.data == data*data).all())
     a /= b
     self.assertTrue((a.data == data).all())
-  
+    a //= hists.Hist(bins,data=[2,2,2])
+    self.assertTrue((a.data == hists.Hist(bins,data=[1,0,1]).data).all())
+    
   def testArithmetic(self):
     "Tests the regular arithmetic"
     bins = [0, 1, 2, 3]
@@ -87,17 +96,17 @@ class testHist(unittest.TestCase):
   def testNonClassIntegerArithmetic(self):
     "Tests arithmetic against non-Hist class values"
     bins = [0, 1]
-    data = numpy.array([1])
+    data = numpy.array([2])
     a = hists.Hist(bins, data)
     
     # Forward tests
-    self.assertEqual((a + 5).data, 6)
-    self.assertEqual((a - 5).data, -4)
-    self.assertEqual((a * 10).data, 10)
-    self.assertEqual((a / 2).data, 0.5)
+    self.assertEqual((a + 5).data, 7)
+    self.assertEqual((a - 5).data, -3)
+    self.assertEqual((a * 10).data, 20)
+    self.assertEqual((a / 2).data, 1)
 
     # Reverse tests
-    self.assertEqual((5+a).data, 6)
+    self.assertEqual((5+a).data, 7)
 
   def testMismatchedData(self):
     "Checks that we cannot do operations on histograms with mismatched data"
