@@ -27,6 +27,12 @@ You can do arithmetic operations in place or seperately:
   >>> b -= a
   >>> a.data == b.data
   array([ True,  True,  True], dtype=bool)  
+
+And you can fill bins from values:
+  >>> a = Hist([0,1,2,3])
+  >>> a.fill(1.4, weight=3)
+  >>> a.data
+  array([ 0.,  3.,  0.])
   
 """
 
@@ -110,6 +116,10 @@ class Hist(object):
       self._data = numpy.array(newdata)
     else:
       raise BinError("Data incorrect dimensions! Data size {0} != {1} bins".format(len(newdata), len(self._bins)-1))
+    # Build the under and overflows
+    self.underflow = self._data.dtype.type(0.0)
+    self.overflow = self._data.dtype.type(0.0)
+    
   # In-place arithmetic operations
   @_match_rank
   def __iadd__(self, other):
@@ -183,3 +193,22 @@ class Hist(object):
   
   # Reverse arithmetic operations
   __radd__ = __add__
+
+  def fill(self, value, weight=1.0):
+    "Fills a bin in the histogram with the value and given weight"
+
+    # Test for underflow
+    if value < self._bins[0]:
+      self.underflow += weight
+      return
+    # And test for overflow
+    if value >= self._bins[-1]:
+      self.overflow += weight
+      return
+    
+    # Find the bin
+    for (num, lowedge) in enumerate(self._bins[:-1]):
+      if value >= num and value < self._bins[num+1]:
+        # We have found the bin!
+        self._data[num] += weight
+    

@@ -38,4 +38,10 @@ You can do arithmetic operations in place or seperately:
   >>> b = a + a
   >>> b -= a
   >>> a.data == b.data
-  array([ True,  True,  True], dtype=bool)
+  array([ True,  True,  True], dtype=bool)  
+
+And you can fill bins from values:
+  >>> a = Hist([0,1,2,3])
+  >>> a.fill(1.4, weight=3)
+  >>> a.data
+  array([ 0.,  3.,  0.])

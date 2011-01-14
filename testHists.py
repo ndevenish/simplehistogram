@@ -11,9 +11,6 @@ import hists
 import numpy
 
 class testHist(unittest.TestCase):
-  def setUp(self):
-    pass
-
   def testSimpleCreation(self):
     "Simple creation routines of a histogram"
     a = hists.Hist([0, 1, 2])
@@ -33,7 +30,23 @@ class testHist(unittest.TestCase):
     a = hists.Hist([0, 1, 2], data=[1, 5])
     self.assertTrue((a.data == numpy.array([1,5])).all())
     self.assertRaises(hists.BinError, hists.Hist, [0, 1, 2], data=[1, 5, 2])
+  
+  def testFlows(self):
+    "Tests that the under/overflows are created properly"  
+    a = hists.Hist([0,1,2,3])
+    self.assertEqual(a.underflow, 0.0)
+    self.assertEqual(a.overflow, 0.0)
+    a = hists.Hist([0,1,2,3], numpy.array([0,1,2]))
+    self.assertEqual(a.underflow, 0)
+    self.assertEqual(a.overflow, 0)
     
+    # Change them, and verify that changing the data resets them
+    a.underflow = 42
+    a.overflow = 99
+    a.data = numpy.array([0.,1.,2.])
+    self.assertEqual(a.underflow, 0.0)
+    self.assertEqual(a.overflow, 0.0)
+  
   def testNullCreation(self):
     "Null creation only works for zero bin entries"
     self.assertRaises(hists.BinError, hists.Hist, [0])
@@ -118,6 +131,50 @@ class testHist(unittest.TestCase):
     self.assertRaises(TypeError, a.__sub__, b)
     self.assertRaises(TypeError, a.__mul__, b)
     self.assertRaises(TypeError, a.__div__, b)
+
+class testHistFilling(unittest.TestCase):
+  def setUp(self):
+    pass
+    
+  def testBasicFill(self):
+    "Tests the elementary filling functions"
+    a = hists.Hist(range(101))
+    a.fill(0.5)
+    self.assertEqual(a.data[0], 1.0)
+    # And, with weights
+    a.fill(1.0, 0.5)
+    self.assertEqual(a.data[1], 0.5)
+  
+  def testFillEdges(self):
+    "Tests the filling edge cases"
+    a = hists.Hist(range(101))
+    # Test that the overflow edge is good
+    a.fill(100)
+    self.assertEqual(a.data[99], 0.0)
+    a.fill(99.9999999)
+    self.assertEqual(a.data[99], 1.0)
+    a.fill(0)
+    self.assertEqual(a.data[0], 1.0)
+    
+    
+  def testFlows1(self):
+    "Tests filling the underflow"
+    a = hists.Hist(range(101))
+    a.fill(-1)
+    self.assertEqual(a.underflow, 1.0)
+
+  def testFlows2(self):
+    "Test missing the overflow"
+    a = hists.Hist(range(101))
+    a.fill(99.9999999)
+    self.assertEqual(a.overflow, 0.0)
+
+  def testFlows3(self):
+    "Test filling the overflow"
+    a = hists.Hist(range(101))
+    a.fill(100)
+    print a.data
+    self.assertEqual(a.overflow, 1.0)
     
 if __name__ == '__main__':
   unittest.main()
