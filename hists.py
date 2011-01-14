@@ -117,7 +117,7 @@ class Hist(object):
   @_match_rank
   def __iadd__(self, other):
     """self += someother"""
-    if isinstance(other, Hist):
+    if hasattr(other, "_data"):
       self._data += other._data
     else:
       self.data += other      
@@ -126,7 +126,7 @@ class Hist(object):
   @_match_rank
   def __isub__(self, other):
     """self -= someother"""
-    if isinstance(other, Hist):
+    if hasattr(other, "_data"):
       self._data -= other._data
     else:
       self.data -= other
@@ -135,7 +135,7 @@ class Hist(object):
   @_match_rank
   def __imul__(self, other):
     """self *= someother"""
-    if isinstance(other, Hist):
+    if hasattr(other, "_data"):
       self._data *= other._data
     else:
       self.data *= other
@@ -144,7 +144,7 @@ class Hist(object):
   @_match_rank
   def __idiv__(self, other):
     """self /= someother"""
-    if isinstance(other, Hist):
+    if hasattr(other, "_data"):
       self._data /= other._data
     else:
       self.data /= other
@@ -153,7 +153,7 @@ class Hist(object):
   @_match_rank
   def __ifloordiv__(self, other):
     """self //= someother"""
-    if isinstance(other, Hist):
+    if hasattr(other, "_data"):
       self._data /= other._data
     else:
       self.data /= other
