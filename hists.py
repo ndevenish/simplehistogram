@@ -226,3 +226,26 @@ class Hist(object):
   
   def __setitem__(self, key, value):
     return self._data.__setitem__(key, value)
+
+def fromTH1(hist):
+  """Creates a hist object from a pyROOT TH1 object"""
+  binedges = []
+  bincontents = []
+  bincount = hist.GetNbinsX()
+  # Grab the bin values
+  for bin in range(1,bincount+2):
+    binedges.append(hist.GetBinLowEdge(bin))
+
+  # Grab the data values separately
+  for bin in range(1,bincount+1):
+    bincontents.append(hist.GetBinContent(bin))
+  
+  # Grab the overflow and underflow
+  overflow = hist.GetBinContent(bincount+1)
+  underflow = hist.GetBinContent(0)
+
+  # Build the new histogram
+  newh = Hist(binedges, data=bincontents)
+  newh.overflow = overflow
+  newh.underflow = underflow
+  return newh
