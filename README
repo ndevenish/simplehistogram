@@ -4,19 +4,22 @@ simplehistogram
 A very simple ndarray-based histogram class.
 
 Created by Nicholas Devenish
-
 =============================================
 
 Matplotlib histograms are geared around drawing, not
-data manupulation. This is intended to turn into a set of
+data manuipulation. This is intended to turn into a set of
 very lightweight classes for shuffling data around. This is
 very much a work-in-progress.
 
-type "make test" to run the unit tests.
+The only required depenency is numpy.
 
-Vague usage:
-(see the hists.py docstring for probably more
-up-to-date instructions)
+Type "make test" to run the core unit tests. Some tests, such
+as the pyROOT-based tests, must be run explicitly (or through
+python2.7> unittest discovery). At the moment, the ROOT test
+requires pyROOT, which is why it doesn't run by default as not
+many people have (or need) this dependency. 
+
+A summary of usage, taken from the hists.py docstring follows:
 
 
 Initialise with bin indices:
@@ -28,10 +31,15 @@ Initialise with bin indices:
   >>> a.data
   array([ 0.,  0.,  0.])
 
-Optionally include data and optional dtype:
-  >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3], dtype=float)
+Optionally include data:
+  >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3])
   >>> a.data
   array([ 1. ,  0.2,  3. ])
+
+Or just specify the blank data type:
+  >>> a = Hist([0, 1, 2, 3], dtype=int)
+  >>> a.data
+  array([0, 0, 0])
 
 You can do arithmetic operations in place or seperately:
   >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3])
@@ -45,3 +53,9 @@ And you can fill bins from values:
   >>> a.fill(1.4, weight=3)
   >>> a.data
   array([ 0.,  3.,  0.])
+
+Even out of range:
+  >>> a = Hist([0,1])
+  >>> a.fill(-10)
+  >>> a.underflow
+  1.0

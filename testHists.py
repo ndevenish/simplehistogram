@@ -124,6 +124,17 @@ class testHist(unittest.TestCase):
     # Reverse tests
     self.assertEqual((5+a).data, 7)
 
+  def testNonClassFloorDivArithmetic(self):
+    """Tests the floor division, using float arrays"""
+    bins = [0, 1]
+    data = numpy.array([2.])
+    a = hists.Hist(bins, data)
+    a //= 2
+    self.assertAlmostEqual(a.data, 1)
+    a[0] = 2.
+    a //= 3
+    self.assertAlmostEqual(a.data, 0)
+    
   def testMismatchedData(self):
     "Checks that we cannot do operations on histograms with mismatched data"
     
@@ -138,6 +149,15 @@ class testHist(unittest.TestCase):
   def testEmptyList(self):
     "Tests the creation of histograms from an empty list"
     a = hists.Hist([])
+    
+  def testRank(self):
+    "Tests the histogram rank property"
+    a = hists.Hist([])
+    self.assertEqual(a.rank, 1)
+    def t():
+      a.rank = 2
+    self.assertRaises(AttributeError, t)
+  
   def testGetItem(self):
     "Tests accessing the data through the histogram[]"
     a = hists.Hist([0,1,2,3,4], data=(0,0,1,0))
@@ -148,7 +168,12 @@ class testHist(unittest.TestCase):
     a = hists.Hist([0,1,2,3,4], data=(0,0,0,0))
     a[2] = 1
     self.assertEqual(a[2], 1)
-  
+    
+  def testRepr(self):
+    "Test grabbing of the __repr__ string"
+    a = hists.Hist([-1,0,1,2], data=(0,0,0))
+    r = repr(a)
+    
 class testHistFilling(unittest.TestCase):
   def setUp(self):
     pass

@@ -16,10 +16,15 @@ Initialise with bin indices:
   >>> a.data
   array([ 0.,  0.,  0.])
 
-Optionally include data and optional dtype:
-  >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3], dtype=float)
+Optionally include data:
+  >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3])
   >>> a.data
   array([ 1. ,  0.2,  3. ])
+
+Or just specify the blank data type:
+  >>> a = Hist([0, 1, 2, 3], dtype=int)
+  >>> a.data
+  array([0, 0, 0])
 
 You can do arithmetic operations in place or seperately:
   >>> a = Hist([0, 1, 2, 3], data=[1, 0.2, 3])
@@ -33,6 +38,12 @@ And you can fill bins from values:
   >>> a.fill(1.4, weight=3)
   >>> a.data
   array([ 0.,  3.,  0.])
+
+Even out of range:
+  >>> a = Hist([0,1])
+  >>> a.fill(-10)
+  >>> a.underflow
+  1.0
   
 """
 
@@ -75,6 +86,10 @@ class Hist(object):
     else:
       self.data = numpy.array(data)
 
+  @property
+  def rank(self):
+    return 1
+  
   @property
   def bins(self):
     "Contains the bin values"
@@ -226,6 +241,11 @@ class Hist(object):
   
   def __setitem__(self, key, value):
     return self._data.__setitem__(key, value)
+
+  def __repr__(self):
+    """Returns the representation"""
+    return "Hist({bins},data={data})".format(bins=repr(self.bins), data=repr(self.data))
+
 
 def fromTH1(hist):
   """Creates a hist object from a pyROOT TH1 object"""
