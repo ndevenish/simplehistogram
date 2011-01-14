@@ -148,7 +148,7 @@ class testHist(unittest.TestCase):
     a = hists.Hist([0,1,2,3,4], data=(0,0,0,0))
     a[2] = 1
     self.assertEqual(a[2], 1)
-    
+  
 class testHistFilling(unittest.TestCase):
   def setUp(self):
     pass
@@ -191,6 +191,14 @@ class testHistFilling(unittest.TestCase):
     a = hists.Hist(range(101))
     a.fill(100)
     self.assertEqual(a.overflow, 1.0)
+  
+  def testNegativeAxis(self):
+    "Tests creation and filling of negative bin sets"
+    a = hists.Hist(range(-10,11))
+    a.fill(-9.5)
+    self.assertEqual(a.data[0], 1)
+    a.fill(-3.2)
+    self.assertEqual(a.data[6], 1)
     
 if __name__ == '__main__':
   unittest.main()

@@ -213,9 +213,13 @@ class Hist(object):
     
     # Find the bin
     for (num, lowedge) in enumerate(self._bins[:-1]):
-      if value >= num and value < self._bins[num+1]:
+      if value >= lowedge and value < self._bins[num+1]:
         # We have found the bin!
         self._data[num] += weight
+        return
+    
+    # Don't fail silently if we didn't find anything
+    raise RuntimeError("Failed to find appropriate bin for value {0}".format(value))
   
   def __getitem__(self, key):
     return self._data[key]
