@@ -211,4 +211,9 @@ class Hist(object):
       if value >= num and value < self._bins[num+1]:
         # We have found the bin!
         self._data[num] += weight
-    
+  
+  def __getitem__(self, key):
+    return self._data[key]
+  
+  def __setitem__(self, key, value):
+    return self._data.__setitem__(key, value)

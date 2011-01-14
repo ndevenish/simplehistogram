@@ -58,7 +58,7 @@ class testHist(unittest.TestCase):
     self.assertEquals(a.data.size, 1)
     # Check this was turned into a tuple
     def t():
-      a[1] = 4
+      a.bins[1] = 4
     self.assertRaises(TypeError, t)
     # Check that bins must be in order
     def t():
@@ -135,6 +135,17 @@ class testHist(unittest.TestCase):
     self.assertRaises(TypeError, a.__mul__, b)
     self.assertRaises(TypeError, a.__div__, b)
 
+  def testGetItem(self):
+    "Tests accessing the data through the histogram[]"
+    a = hists.Hist([0,1,2,3,4], data=(0,0,1,0))
+    self.assertEqual(a[2], 1)
+  
+  def testSetItem(self):
+    "Tests setting bin values through []"
+    a = hists.Hist([0,1,2,3,4], data=(0,0,0,0))
+    a[2] = 1
+    self.assertEqual(a[2], 1)
+    
 class testHistFilling(unittest.TestCase):
   def setUp(self):
     pass
@@ -176,7 +187,6 @@ class testHistFilling(unittest.TestCase):
     "Test filling the overflow"
     a = hists.Hist(range(101))
     a.fill(100)
-    print a.data
     self.assertEqual(a.overflow, 1.0)
     
 if __name__ == '__main__':
