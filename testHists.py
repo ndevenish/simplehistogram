@@ -134,7 +134,10 @@ class testHist(unittest.TestCase):
     self.assertRaises(TypeError, a.__sub__, b)
     self.assertRaises(TypeError, a.__mul__, b)
     self.assertRaises(TypeError, a.__div__, b)
-
+  
+  def testEmptyList(self):
+    "Tests the creation of histograms from an empty list"
+    a = hists.Hist([])
   def testGetItem(self):
     "Tests accessing the data through the histogram[]"
     a = hists.Hist([0,1,2,3,4], data=(0,0,1,0))

@@ -55,7 +55,6 @@ def _match_rank(f):
 
 class Hist(object):
   """ndarray based histogram object"""
-
   def __init__(self, bins, data=None, dtype=float):
     """Initialise a new Hist.
     
@@ -72,7 +71,7 @@ class Hist(object):
     
     # Assign the data, if we have been given any
     if data is None:
-      self.data = numpy.zeros(len(bins)-1, dtype=dtype)
+      self.data = numpy.zeros(self.bincount, dtype=dtype)
     else:
       self.data = numpy.array(data)
 
@@ -87,6 +86,12 @@ class Hist(object):
     # Is the bin array a valid size? (i.e. > 1 or zero)
     if len(newbins) == 1:
       raise BinError("Must provide more that one value for a single bin")
+      
+    # Calculate the number of bins
+    if len(newbins) == 0:
+      bincount = 0
+    else:
+      bincount = len(newbins)-1
     
     # Ensure the bins are numerically sequential
     if not tuple(newbins) == tuple(sorted(newbins)):
@@ -94,14 +99,14 @@ class Hist(object):
     
     # Do we need to resize our data?
     if self._bins and len(newbins) != len(self._bins):
-      self.data.resize(len(newbins)-1)
+      self.data.resize(bincount)
     
     self._bins = tuple(newbins)
   
   @property
   def bincount(self):
     "Returns the number of bins"
-    return self.data.size
+    return max(len(self._bins)-1, 0)
   
   @property
   def data(self):
@@ -112,7 +117,7 @@ class Hist(object):
   def data(self, newdata):
     "Sets the internal data object"
     # Check this matches our bin count
-    if len(newdata) == len(self._bins)-1:
+    if len(newdata) == self.bincount:
       self._data = numpy.array(newdata)
     else:
       raise BinError("Data incorrect dimensions! Data size {0} != {1} bins".format(len(newdata), len(self._bins)-1))
