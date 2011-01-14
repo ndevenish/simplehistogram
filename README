@@ -11,7 +11,8 @@ data manuipulation. This is intended to turn into a set of
 very lightweight classes for shuffling data around. This is
 very much a work-in-progress.
 
-The only required depenency is numpy.
+The only required depenency is numpy, and the package is designed
+to work for python > 2.6
 
 Type "make test" to run the core unit tests. Some tests, such
 as the pyROOT-based tests, must be run explicitly (or through
