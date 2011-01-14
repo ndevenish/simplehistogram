@@ -57,11 +57,14 @@ class testHist(unittest.TestCase):
     a.bins = [0, 1]
     self.assertEquals(a.data.size, 1)
     # Check this was turned into a tuple
-    with self.assertRaises(TypeError):
+    def t():
       a[1] = 4
+    self.assertRaises(TypeError, t)
     # Check that bins must be in order
-    with self.assertRaises(hists.BinError):
+    def t():
       a.bins = [0, 2, 1, 3]
+    self.assertRaises(hists.BinError, t)
+      
     
   def test_bin_count(self):
     """Test the .bincount property makes sense"""
