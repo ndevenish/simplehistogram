@@ -42,7 +42,7 @@ def _match_rank(f):
   def checkrank(self, other):
     if isinstance(other, Hist):
       if self.data.size != other.data.size:
-        raise TypeError("Histogram data arrays do not match size! {} != {}"
+        raise TypeError("Histogram data arrays do not match size! {0} != {1}"
                         .format(self.data.size, other.data.size))
     return f(self, other)
   return checkrank
@@ -109,8 +109,7 @@ class Hist(object):
     if len(newdata) == len(self._bins)-1:
       self._data = numpy.array(newdata)
     else:
-      raise BinError("Data incorrect dimensions! Data size {} != {} bins".format(len(newdata), len(self._bins)-1))
-  
+      raise BinError("Data incorrect dimensions! Data size {0} != {1} bins".format(len(newdata), len(self._bins)-1))
   # In-place arithmetic operations
   @_match_rank
   def __iadd__(self, other):
