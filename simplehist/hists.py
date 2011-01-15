@@ -246,6 +246,8 @@ class Hist(object):
     """Returns the representation"""
     return "Hist({bins},data={data})".format(bins=repr(self.bins), data=repr(self.data))
 
+  def Hist(self, **kwargs):
+    pass
 
 def fromTH1(hist):
   """Creates a hist object from a pyROOT TH1 object"""

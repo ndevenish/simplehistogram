@@ -1,10 +1,12 @@
-=============================================
-simplehistogram
+SimpleHist
+==========
 
 A very simple ndarray-based histogram class.
 
 Created by Nicholas Devenish
-=============================================
+
+Overview
+--------
 
 Matplotlib histograms are geared around drawing, not
 data manuipulation. This is intended to turn into a set of
@@ -19,6 +21,9 @@ as the pyROOT-based tests, must be run explicitly (or through
 python2.7> unittest discovery). At the moment, the ROOT test
 requires pyROOT, which is why it doesn't run by default as not
 many people have (or need) this dependency. 
+
+Usage
+-----
 
 A summary of usage, taken from the hists.py docstring follows:
 

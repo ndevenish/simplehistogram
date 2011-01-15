@@ -14,7 +14,7 @@ Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 
 import unittest
 from ROOT import TH1D
-import hists
+import simplehist.hists as hists
 
 class TestROOT(unittest.TestCase):
   def setUp(self):

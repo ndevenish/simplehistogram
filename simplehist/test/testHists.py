@@ -7,7 +7,7 @@ Created by Nicholas Devenish on 2011-01-12.
 """
 
 import unittest
-import hists
+import simplehist.hists as hists
 import numpy
 
 class testHist(unittest.TestCase):
