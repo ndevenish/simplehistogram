@@ -24,7 +24,7 @@ setup(
       "Development Status :: 2 - Pre-Alpha",
       "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    install_requires=['numpy'],
+    install_requires=['numpy', 'matplotlib'],
     test_suite='simplehist.test',
     zip_safe=False,
 )

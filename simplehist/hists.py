@@ -52,6 +52,7 @@ import numpy
 import copy
 
 from binning import BinError
+import binning
 
 def _match_rank(f):
   """Decorator to ensure that the second argument matches rank"""
@@ -245,8 +246,21 @@ class Hist(object):
     """Returns the representation"""
     return "Hist({bins},data={data})".format(bins=repr(self.bins), data=repr(self.data))
 
-  def Hist(self, **kwargs):
-    pass
+  def draw_hist(self, **kwargs):
+    """Draw the histogram using matplotlib.
+    
+    Returns the matplotlib hist return values"""
+    
+    if not kwargs.has_key("histtype"):
+      kwargs["histtype"] = 'step'
+    # Lazy import as it can take a little time to load and we might not always need to plot
+    import matplotlib.pyplot as plt
+    
+    bins = binning.BinningScheme(self.bins)
+    weights = self.data
+    # Do the actual matplotlib drawing
+    plot = plt.hist(bins.centers, weights=self.data, bins=self.bins, **kwargs)
+    return plot
 
 def fromTH1(hist):
   """Creates a hist object from a pyROOT TH1 object"""
