@@ -51,8 +51,7 @@ Even out of range:
 import numpy
 import copy
 
-class BinError(Exception):
-  pass
+from binning import BinError
 
 def _match_rank(f):
   """Decorator to ensure that the second argument matches rank"""
