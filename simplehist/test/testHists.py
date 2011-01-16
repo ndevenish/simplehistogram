@@ -3,7 +3,7 @@
 """
 testHists.py
 
-Created by Nicholas Devenish on 2011-01-12.
+Copyright (c) 2011 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
 """
 
 import unittest

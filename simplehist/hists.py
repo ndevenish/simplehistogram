@@ -3,7 +3,7 @@
 """
 hists.py
 
-Created by Nicholas Devenish on 2011-01-12.
+Copyright (c) 2011 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
 
 An easy, quick, lightweight histogram class based on ndarray
 
@@ -56,7 +56,6 @@ And you can draw histograms, using any of the options
 that can be passed to matplotlib.pyplot.hist:
   >>> hist_object.draw_hist(lw=2)
 """
-
 
 import numpy
 import copy
@@ -261,13 +260,13 @@ class Hist(object):
     
     Returns the matplotlib hist return values"""
     
+    # Default to step type, if none has been declared
     if not kwargs.has_key("histtype"):
       kwargs["histtype"] = 'step'
     # Lazy import as it can take a little time to load and we might not always need to plot
     import matplotlib.pyplot as plt
     
     bins = binning.BinningScheme(self.bins)
-    weights = self.data
     # Do the actual matplotlib drawing
     plot = plt.hist(bins.centers, weights=self.data, bins=self.bins, **kwargs)
     return plot

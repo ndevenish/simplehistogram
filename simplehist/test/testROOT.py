@@ -8,8 +8,7 @@ in a separate tests because I wanted to remove the expicit dependence
 on pyROOT (and didn't want to put the effort into duplicating the
 subtleties of the ROOT histogram interfaces)
 
-Created by Nicholas Devenish on 2011-01-14.
-Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+Copyright (c) 2011 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
 """
 
 import unittest

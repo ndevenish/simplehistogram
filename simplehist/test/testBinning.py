@@ -5,7 +5,6 @@ testBinning.py
 
 Tests the simplehist.binning module
 
-Created by Nicholas Devenish on 2011-01-16.
 Copyright (c) 2011 Nicholas Devenish
 """
 

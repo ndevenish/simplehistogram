@@ -3,9 +3,13 @@
 """
 bins.py
 
-Created by Nicholas Devenish on 2011-01-12.
+Copyright (c) 2011 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
 
 Contains the logic for creating and inspecting sequences of bins
+"""
+
+__license__ = """Copyright (c) 2011 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
+MIT License <http://www.opensource.org/licenses/mit-license.php>
 """
 
 import numpy

@@ -3,8 +3,8 @@ from setuptools import setup
 
 setup(
     name='SimpleHist',
-    version='0.1dev',
-    description="Simple histograms, designed for data manipulation",
+    version='0.1',
+    description="Simple histogram classes, designed for data manipulation",
     author='Nicholas Devenish',
     author_email='n.e.devenish@sussex.ac.uk',
     packages=['simplehist', 'simplehist.test'],
