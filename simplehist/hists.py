@@ -44,7 +44,17 @@ Even out of range:
   >>> a.fill(-10)
   >>> a.underflow
   1.0
-  
+
+If you use pyROOT, you can convert from 1D histograms:
+  >>> type(source)
+  <class 'ROOT.TH1D'>
+  >>> convert = fromTH1(source)
+  >>> type(convert)
+  <class 'simplehist.hists.Hist'>
+
+And you can draw histograms, using any of the options
+that can be passed to matplotlib.pyplot.hist:
+  >>> hist_object.draw_hist(lw=2)
 """
 
 

@@ -1,17 +1,17 @@
 SimpleHist
 ==========
 
-A very simple ndarray-based histogram class.
-
-Created by Nicholas Devenish
+:Description: A very simple ndarray-based histogram class.
+:Author:      Nicholas Devenish
 
 Overview
 --------
 
 Matplotlib histograms are geared around drawing, not
-data manuipulation. This is intended to turn into a set of
-very lightweight classes for shuffling data around. This is
-very much a work-in-progress.
+data manuipulation. Numpy direct support for histograms is
+extremely limited, and not very different from matpotlib.
+This is intended to turn into a set of very lightweight classes
+for shuffling data around. This is very much a work-in-progress.
 
 The only required depenency is numpy, and the package is designed
 to work for python > 2.6
@@ -27,6 +27,8 @@ Usage
 
 A summary of usage, taken from the hists.py docstring follows:
 
+Importing:
+  >>> from simplehist import Hist
 
 Initialise with bin indices:
   >>> a = Hist([0, 1, 2, 3])
@@ -65,3 +67,15 @@ Even out of range:
   >>> a.fill(-10)
   >>> a.underflow
   1.0
+
+If you use pyROOT, you can convert from 1D histograms:
+  >>> type(source)
+  <class 'ROOT.TH1D'>
+  >>> convert = fromTH1(source)
+  >>> type(convert)
+  <class 'simplehist.hists.Hist'>
+
+And you can draw histograms, using any of the options
+that can be passed to matplotlib.pyplot.hist:
+
+  >>> hist_object.draw_hist(lw=2)
