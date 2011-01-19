@@ -173,6 +173,16 @@ class testHist(unittest.TestCase):
     "Test grabbing of the __repr__ string"
     a = hists.Hist([-1,0,1,2], data=(0,0,0))
     r = repr(a)
+  
+  def testIntegrate(self):
+    "Tests integrating of the histogram"
+    a = hists.Hist([-1,0,1,2], data=(0,1.3345,0))
+    self.assertAlmostEqual(a.integral(), 1.3345)
+    
+    # And overflow
+    a.fill(-10)
+    self.assertAlmostEqual(a.integral(), 1.3345)
+    self.assertAlmostEqual(a.integral(all=True), 2.3345)
     
 class testHistFilling(unittest.TestCase):
   def setUp(self):

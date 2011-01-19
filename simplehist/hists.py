@@ -270,7 +270,18 @@ class Hist(object):
     # Do the actual matplotlib drawing
     plot = plt.hist(bins.centers, weights=self.data, bins=self.bins, **kwargs)
     return plot
-
+  
+  def integral(self, all=False):
+    """Calculates the integral of the histogram.
+    
+    Setting 'all' includes the overflow/underflow bins
+    """
+    cumulative = numpy.sum(self.data)
+    if all:
+      cumulative += self.overflow + self.underflow
+    
+    return cumulative
+    
 def fromTH1(hist):
   """Creates a hist object from a pyROOT TH1 object"""
   binedges = []
