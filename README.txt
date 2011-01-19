@@ -8,19 +8,13 @@ Overview
 --------
 
 Matplotlib histograms are geared around drawing, not
-data manuipulation. Numpy direct support for histograms is
+data manipulation. Numpy direct support for histograms is
 extremely limited, and not very different from matpotlib.
 This is intended to turn into a set of very lightweight classes
 for shuffling data around. This is very much a work-in-progress.
 
 The only required depenency is numpy, and the package is designed
-to work for python > 2.6
-
-Type "make test" to run the core unit tests. Some tests, such
-as the pyROOT-based tests, must be run explicitly (or through
-python2.7> unittest discovery). At the moment, the ROOT test
-requires pyROOT, which is why it doesn't run by default as not
-many people have (or need) this dependency. 
+to work for python >= 2.6
 
 Usage
 -----
