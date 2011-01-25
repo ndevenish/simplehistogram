@@ -52,7 +52,7 @@ class Hist2D(object):
     
   @property
   def bincount(self):
-    "Returns the number of bins"
+    "Returns the number of bins for each dimension"
     return tuple(len(x)-1 for x in self.bins)
       
   @property
@@ -81,3 +81,8 @@ class Hist2D(object):
 
   def __setitem__(self, key, value):
     return self._data.__setitem__(key, value)
+    
+  def __repr__(self):
+    """Returns the representation"""
+    return "Hist2D({xbins},{ybins},data={data})".format(xbins=repr(self.bins.x), ybins=repr(self.bins.y), data=repr(self.data))
+  
