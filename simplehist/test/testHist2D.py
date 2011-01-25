@@ -29,10 +29,33 @@ class testHist2D(unittest.TestCase):
     "Tests setting bins"
     a = Hist2D([0,1],[0,1])
     a.bins = ((0,1,2,3),(0,1,2,3,4))
+
+    # Test various valid combinations
+    a.bins = ((0,1),(0,1))
+    a.bins = ((0,1),[0,1])
     
     def assignbin(value):
       a.bins = (value)
     self.assertRaises(BinError, assignbin, (0,1,2,3))
+    self.assertRaises(BinError, assignbin, ((0,),(0,1)))
+    self.assertRaises(BinError, assignbin, ((0,1),(0,)))
+    self.assertRaises(BinError, assignbin, ((0,),(0,1)))
+    self.assertRaises(BinError, assignbin, ([],(0,1)))
+    self.assertRaises(BinError, assignbin, ((0,1),[]))
 
+  def testBinSetData(self):
+    """Test that settng bins changes the data array"""
+    a = Hist2D([0,1],[0,1])
+    self.assertEqual(a.data.shape, (1,1))
+    a.bins = [[0,1,2],[0,1,2,3,4]]
+    self.assertEqual(a.data.shape, (2,4))
+  
+  def testBinCount(self):
+    """Tests the .bincount property"""
+    a = Hist2D([0,1],[0,1])
+    self.assertEqual(a.bincount, (1,1))
+    a = Hist2D([0,1,2,3],[0,1])
+    self.assertEqual(a.bincount, (3,1))
+    
 if __name__ == '__main__':
   unittest.main()
