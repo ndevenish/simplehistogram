@@ -49,7 +49,6 @@ class Hist2D(object):
     
     # Pass through the arrays inside value as a tuple array
     self._bins = BinTuple(*(tuple(x) for x in value))
-    print "Done"
     
   @property
   def bincount(self):
@@ -76,3 +75,9 @@ class Hist2D(object):
       raise BinError("Data incorrect dimensions! Data size {0} != {1} bins".format(numpyval.shape, tuple(self.bincount)))
     
     self._data = numpyval
+
+  def __getitem__(self, key):
+    return self._data[key]
+
+  def __setitem__(self, key, value):
+    return self._data.__setitem__(key, value)

@@ -7,6 +7,7 @@ Created by Nicholas Devenish on 2011-01-24.
 """
 
 import unittest
+import numpy
 from simplehist import Hist2D, BinError
 
 class testHist2D(unittest.TestCase):
@@ -68,5 +69,28 @@ class testHist2D(unittest.TestCase):
     self.assertRaises(BinError, assigndata, [0])
     self.assertRaises(BinError, assigndata, [[0],[0]])
   
+  def testGetter(self):
+    """Tests getting of data items"""
+    a = Hist2D(range(11),range(11))
+    ident = numpy.identity(10)
+    ident[5,2] = 2
+    a.data = ident
+
+    self.assertAlmostEqual(a[5,2],2)
+    self.assertAlmostEqual(a[2,5],0)
+    for x in range(10):
+      self.assertAlmostEqual(a[x,x], 1)
+  
+  def testSetter(self):
+    """Tests setting of data items"""
+    a = Hist2D(range(11),range(11))
+    for x in range(10):
+      for y in range(10):
+        self.assertAlmostEqual(a[x,y],0)
+        a[x,y] = 34.5
+        self.assertAlmostEqual(a[x,y],34.5)
+        a[x,y] = 0
+        self.assertAlmostEqual(a[x,y],0.0)
+    
 if __name__ == '__main__':
   unittest.main()
