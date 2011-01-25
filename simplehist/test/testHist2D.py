@@ -57,5 +57,16 @@ class testHist2D(unittest.TestCase):
     a = Hist2D([0,1,2,3],[0,1])
     self.assertEqual(a.bincount, (3,1))
     
+  def testSetData(self):
+    """Tests assigning data"""
+    a = Hist2D([0,1],[0,1])
+    a.data = [[0]]
+
+    # Test invalid assignments
+    def assigndata(value):
+      a.data = value
+    self.assertRaises(BinError, assigndata, [0])
+    self.assertRaises(BinError, assigndata, [[0],[0]])
+  
 if __name__ == '__main__':
   unittest.main()

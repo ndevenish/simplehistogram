@@ -69,8 +69,10 @@ class Hist2D(object):
   def data(self, value):
     """Sets the data array"""
     
-    # Validate that the size matches our bin count
-    if value.shape != self.bincount:
-      raise BinError("Data incorrect dimensions! Data size {0} != {1} bins".format(tuple(value), tuple(self.bincount)))
+    numpyval = numpy.array(value)
     
-    self._data = numpy.array(value)
+    # Validate that the size matches our bin count
+    if numpyval.shape != self.bincount:
+      raise BinError("Data incorrect dimensions! Data size {0} != {1} bins".format(numpyval.shape, tuple(self.bincount)))
+    
+    self._data = numpyval
