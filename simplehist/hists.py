@@ -301,8 +301,14 @@ class Hist(object):
       bindata = numpy.array(self.data[bin:bin+count])
       # normalise to unit bin width if in area mode
       if area:
-        binwidth = numpy.array(self.bins[bin+1:bin+count+1]) - \
-                   numpy.array(self.bins[bin:bin+count])
+        upedge = numpy.array(self.bins[bin+1:bin+count+1])
+        lowedge = numpy.array(self.bins[bin:bin+count])
+        binwidth = upedge - lowedge
+                   
+        print "bin: {}, newbin: {}, count: {}".format(bin, newbin, count)
+        print "upedge: {}, lowedge: {}".format(upedge, lowedge)
+        print "binwidth:", binwidth
+        print "on data: ", bindata
         bindata *= binwidth
       # Sum the selected bins
       dataagg = numpy.sum(bindata)
