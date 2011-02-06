@@ -282,8 +282,11 @@ class Hist(object):
     
     return cumulative
   
-  def mergebins(self, count):
-    """Merges bins. The number of bins merged is indicated by count
+  def mergebins(self, count, area=False):
+    """Merges bins. The number of bins merged is indicated by count.
+    
+    Parameters:
+    area: If True, then bin area is conserved. Defaults to False
     """
     newbins = []
     nbins = self.bincount // count
@@ -295,7 +298,17 @@ class Hist(object):
     
     # Loop over each of our bins
     for newbin, bin in enumerate(range(0,self.bincount,count)):
-      dataagg = numpy.sum(self.data[bin:bin+count])
+      bindata = numpy.array(self.data[bin:bin+count])
+      # normalise to unit bin width if in area mode
+      if area:
+        binwidth = numpy.array(self.bins[bin+1:bin+count+1]) - \
+                   numpy.array(self.bins[bin:bin+count])
+        bindata *= binwidth
+      # Sum the selected bins
+      dataagg = numpy.sum(bindata)
+      # And de-normalise if in area mode
+      if area:
+        dataagg /= self.bins[bin+count] - self.bins[bin]
       data[newbin] = dataagg
       newbins.append(self.bins[bin])
     # Append the end rightmargin onto the end of our array

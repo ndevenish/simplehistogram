@@ -259,6 +259,18 @@ class testHistFilling(unittest.TestCase):
     expected = [3,0]
     for bin in range(2):
       self.assertAlmostEqual(c.data[bin], expected[bin])
+  
+  def testAreaMergebins(self):
+    """Tests mergebinning by bin area counts"""
+    a = hists.Hist([0,1,2,4,5,8,12], data=[0,1,1,2,3,1.2])
+    # Width = 1,1, 2,1, 3,4
+    # Data  = 0,1, 1,2, 3,1.2
+    a.mergebins(2, area=True)
+    self.assertEqual(a.bincount, 3)
+    expected = [0.5,4./3,(9+4*1.2)/7]
+    for bin in range(a.bincount):
+      self.assertAlmostEqual(a.data[bin], expected[bin])
+    
     
 if __name__ == '__main__':
   unittest.main()
