@@ -9,6 +9,8 @@ Copyright (c) 2011 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
 import unittest
 import simplehist.hists as hists
 import numpy
+from copy import deepcopy
+
 
 class testHist(unittest.TestCase):
   def testSimpleCreation(self):
@@ -234,6 +236,29 @@ class testHistFilling(unittest.TestCase):
     self.assertEqual(a.data[0], 1)
     a.fill(-3.2)
     self.assertEqual(a.data[6], 1)
+  
+  def testMergebins(self):
+    "Tests Mergebinning a histogram"
+    a = hists.Hist([0,1,2,3,4,5,6])
+    self.assertEqual(a.bincount, 6)
+    a.fill(1.5)
+    a.fill(2.5)
+    a.fill(3.5)
+
+    b = deepcopy(a)
+    b.mergebins(2)
+    self.assertEqual(b.bincount, 3)
+    expected = [1,2,0]
+    for bin in range(3):
+      self.assertAlmostEqual(b.data[bin], expected[bin])
+    
+    # Test odd-aspect merging
+    c = deepcopy(a)
+    c.mergebins(4)
+    self.assertEqual(c.bincount, 2)
+    expected = [3,0]
+    for bin in range(2):
+      self.assertAlmostEqual(c.data[bin], expected[bin])
     
 if __name__ == '__main__':
   unittest.main()

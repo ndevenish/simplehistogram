@@ -281,7 +281,29 @@ class Hist(object):
       cumulative += self.overflow + self.underflow
     
     return cumulative
+  
+  def mergebins(self, count):
+    """Merges bins. The number of bins merged is indicated by count
+    """
+    newbins = []
+    nbins = self.bincount // count
+    # In case we don't exactly divide by the merging count
+    if (self.bincount % count) != 0:
+      nbins += 1
+    # Create the new data array
+    data = numpy.zeros(nbins, dtype=self._data.dtype)
     
+    # Loop over each of our bins
+    for newbin, bin in enumerate(range(0,self.bincount,count)):
+      dataagg = numpy.sum(self.data[bin:bin+count])
+      data[newbin] = dataagg
+      newbins.append(self.bins[bin])
+    # Append the end rightmargin onto the end of our array
+    newbins.append(self.bins[-1])
+    # Set this
+    self.bins = newbins
+    self.data = data
+        
 def fromTH1(hist):
   """Creates a hist object from a pyROOT TH1 object"""
   binedges = []
