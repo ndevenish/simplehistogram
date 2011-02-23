@@ -305,10 +305,10 @@ class Hist(object):
         lowedge = numpy.array(self.bins[bin:bin+count])
         binwidth = upedge - lowedge
                    
-        print "bin: {}, newbin: {}, count: {}".format(bin, newbin, count)
-        print "upedge: {}, lowedge: {}".format(upedge, lowedge)
-        print "binwidth:", binwidth
-        print "on data: ", bindata
+        # print "bin: {}, newbin: {}, count: {}".format(bin, newbin, count)
+        # print "upedge: {}, lowedge: {}".format(upedge, lowedge)
+        # print "binwidth:", binwidth
+        # print "on data: ", bindata
         bindata *= binwidth
       # Sum the selected bins
       dataagg = numpy.sum(bindata)
