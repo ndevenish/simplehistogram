@@ -185,7 +185,64 @@ class testHist(unittest.TestCase):
     a.fill(-10)
     self.assertAlmostEqual(a.integral(), 1.3345)
     self.assertAlmostEqual(a.integral(all=True), 2.3345)
-    
+  def testMergebins(self):
+    "Tests Mergebinning a histogram"
+    a = hists.Hist([0,1,2,3,4,5,6])
+    self.assertEqual(a.bincount, 6)
+    a.fill(1.5)
+    a.fill(2.5)
+    a.fill(3.5)
+
+    b = deepcopy(a)
+    b.mergebins(2)
+    self.assertEqual(b.bincount, 3)
+    expected = [1,2,0]
+    for bin in range(3):
+      self.assertAlmostEqual(b.data[bin], expected[bin])
+
+    # Test odd-aspect merging
+    c = deepcopy(a)
+    c.mergebins(4)
+    self.assertEqual(c.bincount, 2)
+    expected = [3,0]
+    for bin in range(2):
+      self.assertAlmostEqual(c.data[bin], expected[bin])
+
+  def testAreaMergebins(self):
+    """Tests mergebinning by bin area counts"""
+    a = hists.Hist([0,1,2,4,5,8,12], data=[0,1,1,2,3,1.2])
+    # Width = 1,1, 2,1, 3,4
+    # Data  = 0,1, 1,2, 3,1.2
+    a.mergebins(2, area=True)
+    self.assertEqual(a.bincount, 3)
+    expected = [0.5,4./3,(9+4*1.2)/7]
+    for bin in range(a.bincount):
+      self.assertAlmostEqual(a.data[bin], expected[bin])
+
+  def testComplexMergeBin(self):
+    """Tests the failure mode of a complex hist from data"""
+    data = hists.Hist((0.0, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0, 6.25, 6.5, 6.75, 7.0, 7.25, 7.5, 7.75, 8.0, 8.25, 8.5, 8.75, 9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75, 11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0, 13.25, 13.5, 13.75, 14.0, 14.25, 14.5, 14.75, 15.0, 15.25, 15.5, 15.75, 16.0, 16.25, 16.5, 16.75, 17.0, 17.25, 17.5, 17.75, 18.0, 18.25, 18.5, 18.75, 19.0, 19.25, 19.5, 19.75, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 32.0, 34.0, 36.0, 38.0, 40.0, 42.0, 44.0, 46.0, 48.0, 50.0, 200.0),data=numpy.array([ 0.        ,  0.39236547,  0.41352704,  0.37823504,  0.22213782,
+            0.1096127 ,  0.07590537,  0.05410349,  0.05589178,  0.01672955,
+            0.02912907,  0.        ,  0.01633081,  0.        ,  0.01905453,
+            0.        ,  0.0136084 ,  0.0089573 ,  0.00382536,  0.01213058,
+            0.00508681,  0.01962308,  0.00892336,  0.01173807,  0.        ,
+            0.00382451,  0.        ,  0.00921557,  0.00391108,  0.        ,
+            0.00674696,  0.00422079,  0.00578021,  0.00790876,  0.0040755 ,
+            0.        ,  0.        ,  0.        ,  0.        ,  0.00396123,
+            0.00845284,  0.        ,  0.        ,  0.        ,  0.00595007,
+            0.00704693,  0.        ,  0.        ,  0.        ,  0.        ,
+            0.        ,  0.        ,  0.        ,  0.        ,  0.00673726,
+            0.00562558,  0.        ,  0.00878138,  0.        ,  0.        ,
+            0.00751557,  0.        ,  0.00757781,  0.00790601,  0.        ,
+            0.        ,  0.00437298,  0.        ,  0.        ,  0.01535721,
+            0.        ,  0.        ,  0.01340345,  0.        ,  0.        ,
+            0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
+            0.00438391,  0.        ,  0.        ,  0.        ,  0.        ,
+            0.        ,  0.00547386,  0.01746112,  0.        ,  0.        ,
+            0.01730692,  0.        ,  0.        ,  0.01814207,  0.        ,
+            0.02847297,  0.        ,  0.        ,  0.        ,  0.01451508]))
+    data.mergebins(3,area=True)
+
 class testHistFilling(unittest.TestCase):
   def setUp(self):
     pass
@@ -236,64 +293,7 @@ class testHistFilling(unittest.TestCase):
     self.assertEqual(a.data[0], 1)
     a.fill(-3.2)
     self.assertEqual(a.data[6], 1)
-  
-  def testMergebins(self):
-    "Tests Mergebinning a histogram"
-    a = hists.Hist([0,1,2,3,4,5,6])
-    self.assertEqual(a.bincount, 6)
-    a.fill(1.5)
-    a.fill(2.5)
-    a.fill(3.5)
 
-    b = deepcopy(a)
-    b.mergebins(2)
-    self.assertEqual(b.bincount, 3)
-    expected = [1,2,0]
-    for bin in range(3):
-      self.assertAlmostEqual(b.data[bin], expected[bin])
-    
-    # Test odd-aspect merging
-    c = deepcopy(a)
-    c.mergebins(4)
-    self.assertEqual(c.bincount, 2)
-    expected = [3,0]
-    for bin in range(2):
-      self.assertAlmostEqual(c.data[bin], expected[bin])
-  
-  def testAreaMergebins(self):
-    """Tests mergebinning by bin area counts"""
-    a = hists.Hist([0,1,2,4,5,8,12], data=[0,1,1,2,3,1.2])
-    # Width = 1,1, 2,1, 3,4
-    # Data  = 0,1, 1,2, 3,1.2
-    a.mergebins(2, area=True)
-    self.assertEqual(a.bincount, 3)
-    expected = [0.5,4./3,(9+4*1.2)/7]
-    for bin in range(a.bincount):
-      self.assertAlmostEqual(a.data[bin], expected[bin])
-  
-  def testComplexMergeBin(self):
-    """Tests the failure mode of a complex hist from data"""
-    data = hists.Hist((0.0, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0, 6.25, 6.5, 6.75, 7.0, 7.25, 7.5, 7.75, 8.0, 8.25, 8.5, 8.75, 9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75, 11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0, 13.25, 13.5, 13.75, 14.0, 14.25, 14.5, 14.75, 15.0, 15.25, 15.5, 15.75, 16.0, 16.25, 16.5, 16.75, 17.0, 17.25, 17.5, 17.75, 18.0, 18.25, 18.5, 18.75, 19.0, 19.25, 19.5, 19.75, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 32.0, 34.0, 36.0, 38.0, 40.0, 42.0, 44.0, 46.0, 48.0, 50.0, 200.0),data=numpy.array([ 0.        ,  0.39236547,  0.41352704,  0.37823504,  0.22213782,
-            0.1096127 ,  0.07590537,  0.05410349,  0.05589178,  0.01672955,
-            0.02912907,  0.        ,  0.01633081,  0.        ,  0.01905453,
-            0.        ,  0.0136084 ,  0.0089573 ,  0.00382536,  0.01213058,
-            0.00508681,  0.01962308,  0.00892336,  0.01173807,  0.        ,
-            0.00382451,  0.        ,  0.00921557,  0.00391108,  0.        ,
-            0.00674696,  0.00422079,  0.00578021,  0.00790876,  0.0040755 ,
-            0.        ,  0.        ,  0.        ,  0.        ,  0.00396123,
-            0.00845284,  0.        ,  0.        ,  0.        ,  0.00595007,
-            0.00704693,  0.        ,  0.        ,  0.        ,  0.        ,
-            0.        ,  0.        ,  0.        ,  0.        ,  0.00673726,
-            0.00562558,  0.        ,  0.00878138,  0.        ,  0.        ,
-            0.00751557,  0.        ,  0.00757781,  0.00790601,  0.        ,
-            0.        ,  0.00437298,  0.        ,  0.        ,  0.01535721,
-            0.        ,  0.        ,  0.01340345,  0.        ,  0.        ,
-            0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
-            0.00438391,  0.        ,  0.        ,  0.        ,  0.        ,
-            0.        ,  0.00547386,  0.01746112,  0.        ,  0.        ,
-            0.01730692,  0.        ,  0.        ,  0.01814207,  0.        ,
-            0.02847297,  0.        ,  0.        ,  0.        ,  0.01451508]))
-    data.mergebins(3,area=True)
   
 if __name__ == '__main__':
   unittest.main()
