@@ -71,3 +71,36 @@ class BinningScheme(object):
   def edges(self):
     """Returns the bin lower edges"""
     return self._bintuple
+
+
+def search_bins(value, bins, depth = 0):
+  "Search an array of sequential bin edges for the correct bin"
+  # depth += 1
+  # spacing = "  " * depth
+  # 
+  # print spacing + "Searching:", bins
+  # 
+  if len(bins) == 2:
+    # print spacing + "Found single bin"
+    return 0
+
+  # Grab the center bin
+  central = (len(bins)-1) // 2
+  # print spacing + "Central =", central, "(" + str(bins[central]) + ")"
+
+  # Is this higher than our value
+  if bins[central] > value:
+    # Search below
+    # print spacing + "Searching below"
+    found =  search_bins(value, bins[:central+1], depth)
+    return found
+
+  # Is the center bin lower than our value?
+  if bins[central] <= value:
+    # Search above
+    # print spacing + "Searching Above"
+    found =  search_bins(value, bins[central:], depth)
+#    print spacing + "Search at level %d of" % depth, bins[central:], "returned", found
+    return central + found
+
+  raise RuntimeError("Didn't match any bin!")
