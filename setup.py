@@ -9,7 +9,7 @@ setup(
     author_email='n.e.devenish@sussex.ac.uk',
     packages=['simplehist', 'simplehist.test'],
     license=open('LICENSE.txt').read(),
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     url='https://github.com/ndevenish/simplehistogram',
     keywords = ['histogram'],
     classifiers = [
