@@ -262,11 +262,13 @@ class Hist(object):
     """Draw the histogram using matplotlib.
     
     Returns the matplotlib hist return values"""
+
+    import matplotlib.pyplot as plt
     
-    x = np.zeros(hist.bincount*2)
-    x[0::2] = hist.bins[:-1]
-    x[1::2] = hist.bins[1:]
-    y = np.repeat(hist.data,2)
+    x = numpy.zeros(self.bincount*2)
+    x[0::2] = self.bins[:-1]
+    x[1::2] = self.bins[1:]
+    y = numpy.repeat(self.data,2)
 
     return plt.plot(x,y,**kwargs)
 
