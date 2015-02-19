@@ -3,22 +3,20 @@
 """Contains code for converting from other histogram types, and hooking
 into this system so that additional type converters can be added."""
 
-
+import itertools
 from .hists import Hist
 
 _type_registry = {}
 
-def to_hist(hist, copy=True):
+def ashist(hist, copy=True):
   """Converts from an input object to a Hist histogram"""
-  import pdb
-  pdb.set_trace()
   if isinstance(hist, Hist) and not copy:
     return hist
   if isinstance(hist, Hist):
     return Hist(hist.bins, data=hist.data)
   else:
     # Look up in the type converter
-    names = [x.__module__ + "." + x.__name__ for x in type(hist).__bases__]
+    names = [x.__module__ + "." + x.__name__ for x in itertools.chain(type(hist).__bases__, [type(hist)])]
     converters = [x for x in _type_registry.keys() if x in names]
     if not converters:
       raise RuntimeError("Do not know how to convert object {}".format(type(hist)))
