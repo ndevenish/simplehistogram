@@ -263,17 +263,13 @@ class Hist(object):
     
     Returns the matplotlib hist return values"""
     
-    # Default to step type, if none has been declared
-    if not kwargs.has_key("histtype"):
-      kwargs["histtype"] = 'step'
-    # Lazy import as it can take a little time to load and we might not always need to plot
-    import matplotlib.pyplot as plt
-    
-    bins = binning.BinningScheme(self.bins)
-    # Do the actual matplotlib drawing
-    plot = plt.hist(bins.centers, weights=self.data, bins=self.bins, **kwargs)
-    return plot
-  
+    x = np.zeros(hist.bincount*2)
+    x[0::2] = hist.bins[:-1]
+    x[1::2] = hist.bins[1:]
+    y = np.repeat(hist.data,2)
+
+    return plt.plot(x,y,**kwargs)
+
   def integral(self, all=False):
     """Calculates the integral of the histogram.
     
