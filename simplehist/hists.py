@@ -92,7 +92,7 @@ class Hist(numpy.ndarray):
     # Don't wrap as a hist if the shape changed - we have no idea how it did so
     if not obj.shape == self.shape:
       return obj
-    return super(Hist,self).__array_wrap__(self,obj,context)
+    return super(Hist,self).__array_wrap__(obj,context)
 
   @property
   def bins(self):

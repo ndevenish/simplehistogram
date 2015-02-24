@@ -89,6 +89,11 @@ def testNegativeAxis():
   a.fill(-3.2)
   assert a[6] == 1
 
+def testFundamentalAlgebra():
+  a = Hist(range(3))
+  b = a + 1
+  assert all(x == 1 for x in b)
+
 def testOutOfOrderBinning():
   assert_raises(ValueError, Hist, [0,1,3,2,4])
   a = Hist([0,1,2,3])
