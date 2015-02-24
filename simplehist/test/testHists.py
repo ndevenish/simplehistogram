@@ -3,10 +3,11 @@
 """
 testHists.py
 
-Copyright (c) 2011 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
+Copyright (c) 2014 Nicholas Devenish <n.e.devenish@sussex.ac.uk>
 """
 
 import numpy
+from nose.tools import assert_raises
 from simplehist import Hist
 
 def testHistIndex():
@@ -56,7 +57,12 @@ def testFillEdges():
   assert a[99] == 1.0
   a.fill(0)
   assert a[0] == 1.0    
-    
+
+def testUfunc():
+  """Test histograms going through a ufunc"""
+  a = Hist(range(10))
+  b = numpy.sum(a)
+  assert b == 0
 #   def testFlows1(self):
 #     "Tests filling the underflow"
 #     a = hists.Hist(range(101))
@@ -82,6 +88,9 @@ def testNegativeAxis():
   assert a[0] == 1
   a.fill(-3.2)
   assert a[6] == 1
-  
-# if __name__ == '__main__':
-#   unittest.main()
+
+def testOutOfOrderBinning():
+  assert_raises(ValueError, Hist, [0,1,3,2,4])
+  a = Hist([0,1,2,3])
+  # Setting after construction
+  assert_raises(ValueError, lambda: setattr(a,"bins", [0,2,1,3]))
