@@ -63,17 +63,31 @@ import numpy
 # A numpy array with bins, and constraints on those bins
 class Hist(numpy.ndarray):
   def __new__(cls, bins, data=None, **kwargs):
-    bins = numpy.asarray(bins)
-    assert bins.ndim >= 1
+    # If bins contains items that are list-like then it is probably multidim
+    if isinstance(bins[0], (tuple, list)):
+      # It must be multi-dimension...
+      bins = tuple(numpy.asarray(x) for x in bins)
+      ndims = len(bins)
+      shape = tuple(len(x)-1 for x in bins)
+    else:
+      # Just a single dimension
+      bins = numpy.asarray(bins)
+      assert bins.ndim == 1
+      ndims = 1
+      shape = (len(bins),)
 
     # Create or validate the data shape
     if data is None:
-      data = numpy.zeros(tuple(x-1 for x in bins.shape), **kwargs)
+      # data = numpy.zeros(tuple(x-1 for x in bins.shape), **kwargs)
+      data = numpy.zeros(shape, **kwargs)
     else:
       data = numpy.asarray(data, **kwargs)
       # Same dimensions and shape-1
-      assert bins.ndim == data.ndim
-      assert all(x == y-1 for x, y in zip(data.shape, bins.shape))
+      assert ndims == data.ndim
+      if ndims == 1:
+        assert all(x == len(y)-1 for x, y in zip(data.shape, [bins]))
+      else:
+        assert all(x == len(y)-1 for x, y in zip(data.shape, bins))
 
     # Cast from our data array
     obj = data.view(cls)
@@ -87,8 +101,8 @@ class Hist(numpy.ndarray):
     self._bins = getattr(obj,"_bins",None)
 
   def __array_wrap__(self,obj,context=None):
-    if obj.ndim == 0 and obj.size == 1:
-      return obj.item()
+    # if obj.ndim == 0 and obj.size == 1:
+    #   return obj.item()
     # Don't wrap as a hist if the shape changed - we have no idea how it did so
     if not obj.shape == self.shape:
       return obj
@@ -109,7 +123,10 @@ class Hist(numpy.ndarray):
 
     Getting singular indices just returns the values, whilst slices return
     subhists, with applicable bins."""
-    if isinstance(index, tuple):
+
+    return super(Hist, self).__getitem__(index)
+
+    if isinstance(index, tuple) and self.ndim == 1:
       binSel = []
       # Build a new tuple for each of the entries
       for selection in index:
@@ -125,7 +142,9 @@ class Hist(numpy.ndarray):
         elif isinstance(selection, int):
           binSel.append(slice(selection, selection+1))
         else:
-          assert False
+          # Throw away the hist information as we don't understand the request
+          return super(Hist, self).__getitem__(index).view(numpy.ndarray)
+          #assert False
       # Build a new histogram with these bins
       ret = super(Hist,self).__getitem__(index).view(Hist)
       # If this gave us a hist.. 
@@ -144,9 +163,14 @@ class Hist(numpy.ndarray):
     #   # Bin-only output
     #   return "{}(bins={})".format(type(self).__name__, numpy.array_repr(self._bins))
     # else:
-    return "{}({}, data={})".format(type(self).__name__,
-      numpy.array_repr(self._bins)[len("array("):-1], 
-      numpy.array_repr(self)[len(type(self).__name__)+1:-1])
+    if self.ndim == 1:
+      return "{}({}, data={})".format(type(self).__name__,
+        numpy.array_repr(self._bins)[len("array("):-1], 
+        numpy.array_repr(self)[len(type(self).__name__)+1:-1])
+    else:
+      return "{}(({}), data={})".format(type(self).__name__,
+        ",".join([numpy.array_repr(x)[6:-1] for x in self._bins]), 
+        numpy.array_repr(self)[len(type(self).__name__)+1:-1])
 
   def fill(self, values, weights=None):
     values = numpy.asarray(values)
@@ -173,9 +197,21 @@ class Hist(numpy.ndarray):
   def draw_hist(self, **kwargs):
     assert self.ndim == 1
     import matplotlib.pyplot as plt
-    x = numpy.zeros(len(self.bins)*2)
+    x = numpy.zeros(len(self)*2)
     x[0::2] = self.bins[:-1]
     x[1::2] = self.bins[1:]
-    y = numpy.repeat(self.data,2)
+    y = numpy.array(numpy.repeat(self,2))
+    # import pdb
+    # pdb.set_trace()
 
     return plt.plot(x,y,**kwargs)
+
+  def pcolor(self, *args, **kwargs):
+    assert self.ndim == 2
+    import matplotlib.pyplot as plt
+    plt.pcolor(self.bins[0], self.bins[1], self.T, *args, **kwargs)
+
+  def pcolormesh(self, *args, **kwargs):
+    assert self.ndim == 2
+    import matplotlib.pyplot as plt
+    plt.pcolor(self.bins[0], self.bins[1], self.T, *args, **kwargs)
