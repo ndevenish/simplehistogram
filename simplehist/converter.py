@@ -75,14 +75,7 @@ def fromTH2(hist):
               [hist.GetYaxis().GetBinLowEdge(x) for x in range(1,bincount[1]+2)])
 
   h = Hist(binedges)
-
   for xbin in range(1,bincount[0]+1):
     for ybin in range(1,bincount[1]+1):
       h[xbin-1,ybin-1] = hist.GetBinContent(xbin,ybin)
-
-  import numpy as np
-  import matplotlib.pyplot as plt
-  
-  import pdb
-  pdb.set_trace()
   return h
