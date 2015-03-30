@@ -74,7 +74,7 @@ class Hist(numpy.ndarray):
       bins = numpy.asarray(bins)
       assert bins.ndim == 1
       ndims = 1
-      shape = (len(bins),)
+      shape = (len(bins)-1,)
 
     # Create or validate the data shape
     if data is None:
